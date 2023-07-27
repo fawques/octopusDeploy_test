@@ -14,6 +14,20 @@ step "plan-to-apply-a-terraform-template" {
             Octopus.Action.Terraform.ManagedAccount = "None"
             Octopus.Action.Terraform.PlanJsonOutput = "False"
             Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
+            Octopus.Action.Terraform.Template = <<-EOT
+                terraform {
+                  backend "s3" {}
+                
+                  required_providers {
+                    aws = {
+                      source  = "hashicorp/aws"
+                      version = ">= 4.45.0"
+                    }
+                  }
+                }
+                
+                EOT
+            Octopus.Action.Terraform.TemplateParameters = "{}"
         }
         worker_pool_variable = ""
     }
