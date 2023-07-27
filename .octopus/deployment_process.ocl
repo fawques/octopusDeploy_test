@@ -1,0 +1,63 @@
+step "plan-to-apply-a-terraform-template" {
+    name = "Plan to apply a Terraform template"
+
+    action "plan-to-apply-a-terraform-template" {
+        action_type = "Octopus.TerraformPlan"
+        name = "Plan to apply a Terraform template"
+        properties = {
+            Octopus.Action.GoogleCloud.ImpersonateServiceAccount = "False"
+            Octopus.Action.GoogleCloud.UseVMServiceAccount = "True"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Terraform.AllowPluginDownloads = "True"
+            Octopus.Action.Terraform.AzureAccount = "False"
+            Octopus.Action.Terraform.GoogleCloudAccount = "False"
+            Octopus.Action.Terraform.ManagedAccount = "None"
+            Octopus.Action.Terraform.PlanJsonOutput = "False"
+            Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
+        }
+        worker_pool_variable = ""
+    }
+
+    action "manual-intervention-required" {
+        action_type = "Octopus.Manual"
+        name = "Manual Intervention Required"
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "Instructions: Approve"
+        }
+    }
+}
+
+step "apply-a-terraform-template" {
+    name = "Apply a Terraform template"
+
+    action {
+        action_type = "Octopus.TerraformApply"
+        properties = {
+            Octopus.Action.GoogleCloud.ImpersonateServiceAccount = "False"
+            Octopus.Action.GoogleCloud.UseVMServiceAccount = "True"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Terraform.AllowPluginDownloads = "True"
+            Octopus.Action.Terraform.AzureAccount = "False"
+            Octopus.Action.Terraform.GoogleCloudAccount = "False"
+            Octopus.Action.Terraform.ManagedAccount = "None"
+            Octopus.Action.Terraform.PlanJsonOutput = "False"
+            Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
+            Octopus.Action.Terraform.Template = <<-EOT
+                terraform {
+                  backend "s3" {}
+                
+                  required_providers {
+                    aws = {
+                      source  = "hashicorp/aws"
+                      version = ">= 4.45.0"
+                    }
+                  }
+                }
+                
+                EOT
+            Octopus.Action.Terraform.TemplateParameters = "{}"
+        }
+        worker_pool_variable = ""
+    }
+}
