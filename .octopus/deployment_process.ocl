@@ -12,7 +12,7 @@ step "plan-to-apply-a-terraform-template" {
             Octopus.Action.Terraform.AzureAccount = "False"
             Octopus.Action.Terraform.GoogleCloudAccount = "False"
             Octopus.Action.Terraform.ManagedAccount = "None"
-            Octopus.Action.Terraform.PlanJsonOutput = "False"
+            Octopus.Action.Terraform.PlanJsonOutput = "True"
             Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
             Octopus.Action.Terraform.Template = <<-EOT
                 terraform {
